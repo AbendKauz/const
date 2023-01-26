@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<context-param>
+		<param-name>POSTS_PER_PAGE</param-name>
+		<param-value>10</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>PAGES_PER_BLOCK</param-name>
+		<param-value>5</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>maxPostSize</param-name>
+		<param-value>1024000</param-value>
+	</context-param>
+	
+	
+	<servlet>
+		<servlet-name>CourseController</servlet-name>
+		<servlet-class>mvc.model.CourseController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CourseController</servlet-name>
+		<url-pattern>/course/.co</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>MainController</servlet-name>
+		<servlet-class>mvc.model.MainController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MainController</servlet-name>
+		<url-pattern>/main/*.ma</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ReviewController</servlet-name>
+		<servlet-class>mvc.model.ReviewController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ReviewController</servlet-name>
+		<url-pattern>/review/*.re</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UserController</servlet-name>
+		<servlet-class>mvc.model.UserController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserController</servlet-name>
+		<url-pattern>/user/*.us</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

@@ -1,0 +1,200 @@
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.catalina.Session;
+
+import model.CourseDAO;
+import model.CourseDTO;
+import model.PrefDAO;
+import model.SelectDTO;
+import model.UserDAO;
+import model.UserDTO;
+import utils.JSFunction;
+
+@WebServlet("/UserController.us")
+public class UserController extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+    static final int LISTCOUNT = 5;
+    
+    public UserController() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String requestURI = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String command = requestURI.substring(contextPath.length());
+		System.out.println(command);
+		
+		response.setContentType("text/html; charset=utf-8");
+		request.setCharacterEncoding("utf-8");
+		
+		if(command.equals("/uJoin.us")) {	// 회원가입
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uJoin.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/uCate.us")) {	// 카테고리 선택
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uCategory.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/chkId.us")) {	// 카테고리 선택
+			String id = request.getParameter("id");
+			UserDAO dao = UserDAO.getInstance();
+			dao.chkId();
+		}else if(command.equals("/uOpt.us")) {	// 옵션 선택
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uOption.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/uResult.us")) {	// 회원가입 결과
+			addUser(request);
+			addUserPre(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uResult.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/addPref.us")) {	// 취향결과 저장
+			addPref(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./main/mMain.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/chkCourse.us")) {	// 추천결과의 카테고리
+			String cours = request.getParameter("cours");
+			chkCate(cours);
+		}else if(command.equals("/cDetail.us")) {	// 취향결과 상세보기
+			addPref(request);
+			selectList(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uDetail.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/tryLogin.us")) {	// 로그인페이지
+			RequestDispatcher rd = request.getRequestDispatcher("./user/uLogin.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/uLogin.us")) {	// 로그인페이지
+			int result = selectUser(request, response);
+			if(result == 1) {
+				RequestDispatcher rd = request.getRequestDispatcher("./main/mMain.jsp");
+				rd.forward(request, response);
+			}else {
+				JSFunction.alertLocation(response, "아이디 또는 비밀번호가 일치하지 않습니다.", "./user/uLogin.jsp");
+			}
+		}else if(command.equals("/uLogout.us")) {	// 로그아웃 처리
+			logout(request, response);
+		}
+		
+	}
+
+	// 신규 사용자 등록
+	private void addUser(HttpServletRequest request) {
+		// 사용자 정보 저장을 위한 DAO 객체 호출
+		UserDAO dao = UserDAO.getInstance();
+		// 가입날짜를 입력하기 위해 호출
+		Calendar date = Calendar.getInstance();
+		SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		// 사용자 정보 저장할 DTO 호출
+		UserDTO udto = new UserDTO();
+		udto.setUid(request.getParameter("id"));
+		udto.setUpw(request.getParameter("pw"));
+		udto.setUname(request.getParameter("name"));
+		udto.setUtel(request.getParameter("tel"));
+		udto.setUregDate(today.format(date.getTime()));
+		udto.setUtok(0);
+		
+		dao.insertUser(udto);
+	}
+	
+	// 사용자의 취향 등록
+	private void addUserPre(HttpServletRequest request) {
+		// 사용자 정보 저장을 위한 DAO 객체 호출
+		UserDAO dao = UserDAO.getInstance();
+		// 사용자가 선택한 카테고리 저장할 DTO 호출
+		SelectDTO sdto = new SelectDTO();
+		sdto.setUid(request.getParameter("id"));
+		sdto.setCategory(Integer.parseInt(request.getParameter("category")));
+		sdto.setArea(request.getParameter("area"));
+		sdto.setLevel(Integer.parseInt(request.getParameter("level")));
+		sdto.setLength(Integer.parseInt(request.getParameter("length")));
+		sdto.setTime(Integer.parseInt(request.getParameter("time")));
+		sdto.setWater(Integer.parseInt(request.getParameter("drink")));
+		sdto.setToilet(Integer.parseInt(request.getParameter("toilet")));
+		sdto.setMart(Integer.parseInt(request.getParameter("mart")));
+		sdto.setKeyword(request.getParameter("keyword"));
+		
+		dao.addCate(sdto);
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("id", request.getParameter("id"));
+	}
+	
+	// 사용자의 취향 결과 등록
+	private void addPref(HttpServletRequest request) {
+		UserDAO dao = UserDAO.getInstance();
+		SelectDTO dto = new SelectDTO();
+		dto.setUid(request.getParameter("id"));
+		dto.setCategory(Integer.parseInt(request.getParameter("category")));
+		dto.setArea(request.getParameter("area"));
+		dto.setLevel(Integer.parseInt(request.getParameter("level")));
+		dto.setLength(Integer.parseInt(request.getParameter("length")));
+		dto.setTime(Integer.parseInt(request.getParameter("time")));
+		dto.setWater(Integer.parseInt(request.getParameter("drink")));
+		dto.setToilet(Integer.parseInt(request.getParameter("toilet")));
+		dto.setMart(Integer.parseInt(request.getParameter("mart")));
+		dto.setKeyword(request.getParameter("keyword"));
+		dto.setPref(request.getParameter("pref"));
+		
+		dao.addPref(dto);
+	}
+	
+	// 출력된 코스의 카테고리 불러오기
+	private String chkCate(String course) {
+		UserDAO dao = UserDAO.getInstance();
+		String cours = dao.chkCourse(course);
+		System.out.println("ctrl 코스 : " + cours);
+		return "./user/uResult.jsp?cours=" + cours;
+	}
+	
+	// 코스 상세보기
+	private void selectList(HttpServletRequest request) {
+		String pref = request.getParameter("pref");
+		CourseDAO dao = CourseDAO.getInstance();
+		CourseDTO course = dao.view(pref);
+		
+		request.setAttribute("course", course);
+	}
+
+	// 유저 로그인
+	private int selectUser(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		if(session.getAttribute("id") != null) {
+			JSFunction.alertLocation(response, "아이디나 비밀번호가 잘못되었습니다.", "../user/uLogin.jsp");
+		}
+		UserDAO dao = UserDAO.getInstance();
+		UserDTO dto = new UserDTO();
+		String uid = request.getParameter("uid");
+		String upw = request.getParameter("upw");
+		dto.setUid(uid);
+		dto.setUpw(upw);
+		int result = dao.selectUser(dto);
+		if(result == 1) {
+			session.setAttribute("id", uid);
+		}
+		return result;
+	}
+	
+	// 사용자 로그아웃
+	private void logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		JSFunction.alertLocation(response, "로그아웃 되었습니다.", "../main/mMain.jsp");
+	}
+	
+}

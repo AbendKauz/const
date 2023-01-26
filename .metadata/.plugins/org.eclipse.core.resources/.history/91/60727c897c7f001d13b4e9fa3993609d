@@ -1,0 +1,61 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원가입 화면</title>
+<!-- style -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="../resources/css/total.css">
+<!-- script -->
+<script type="text/javascript" src="../resources/js/user.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+	<div class="container">
+		<div class="input-form-backgroud row">
+			<div class="input-form col-md-12 mx-auto">
+				<h4 class="mb-3">회원가입</h4>
+				<form action="/uCate.us" method="post" id="validation_form" name="validation_form" class="validation_form">
+					<div class="col-md-6 mb-3">
+						<label for="uid">ID</label>
+						<input type="text" class="form-control" id="uid" name="uid" placeholder="ID를 입력해주세요">
+						<button type="button" id="chkId" name="chkId" onclick="chk()">ID 중복검사</button>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="uname">이름</label>
+						<input type="text" class="form-control" id="uname" name="uname" placeholder="이름을 입력해주세요">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="uid">비밀번호</label>
+						<input type="password" class="form-control" id="upw" name="upw" placeholder="비밀번호를 입력해주세요">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="chkpw">비밀번호 확인</label>
+						<input type="password" class="form-control" id="chkpw" name="chkpw" placeholder="비밀번호를 한번 더 입력해주세요.">
+					</div>
+					<div class="col-md-6 mb-3 utel">
+						<label for="utel1">전화번호</label>
+						<input type="text" id="utel1" name="utel1" maxlength="3" size="3"  value="010" readonly> - 
+						<input type="text" id="utel2" name="utel2" maxlength="4" size="4" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"> - 
+						<input type="text" id="utel3" name="utel3" maxlength="4" size="4" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
+						<div class="invalid-feedback">전화번호를 입력해주세요.</div>
+					</div>
+					<hr>
+					<button class="btn btn-primary btn-lg btn-block" type="button" onclick="chkForm()">다음단계로</button>
+					<button class="btn btn-primary btn-lg btn-block" type="button" onclick="pageBack()">가입 취소</button>
+				</form>
+			</div>
+		</div>
+		<jsp:include page="../include/footer.jsp" />
+	</div>
+</body>
+</html>

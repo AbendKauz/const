@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<script type="text/javascript">
+	function chk(form){
+		if(!chkForm.uid.value){
+			alert("아이디를 입력해주세요.");
+			chkForm.uid.focus();
+		}else if(!chkForm.upw.value){
+			alert("비밀번호를 입력해주세요.");
+			chkForm.upw.focus();
+		}else if(chkForm.upw.value != chkForm.chkpw.value){
+			alert("비밀번호가 일치하지 않습니다.");
+			chkForm.chkpw.value = "";
+			chkForm.chkpw.focus();
+		}else if(!chkForm.uname.value){
+			alert("이름을 입력해주세요.");
+			chkForm.uname.focus();
+		}else if(!chkForm.utel2.value){
+			alert("전화번호를 입력해주세요.");
+			chkForm.utel2.focus();
+		}else if(!chkForm.utel3.value){
+			alert("전화번호를 입력해주세요.");
+			chkForm.utel3.focus();
+		}else{
+			chkForm.submit();
+		}
+	}
+	
+	function pageBack(){
+		history.back(-1);
+	}
+	
+</script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+	<form action="select1.u" name="chkForm" method="post">
+		<label>아이디 : </label>
+		<input type="text" id="uid" name="uid"><br/>
+		<label>비밀번호 : </label>
+		<input type="password" id="upw" name="upw"><br/>
+		<label>비밀번호 확인 : </label>
+		<input type="password" id="chkpw" name="chkpw"><br/>
+		<label>이름 : </label>
+		<input type="text" id="uname" name="uname"><br/>
+		<label>전화번호 : </label>
+		<input type="text" id="utel1" name="utel1" maxlength="3" size="3" value="010" readonly="readonly">
+		 - <input type="text" id="utel2" name="utel2" maxlength="4" size="4" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
+		  - <input type="text" id="utel3" name="utel3" maxlength="4" size="4" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"><br/>
+		<button type="button" onclick="chk(this)">가입</button>
+		<button type="button" onclick="pageBack()">취소</button>
+	</form>
+	<jsp:include page="../include/footer.jsp" />
+</body>
+</html>

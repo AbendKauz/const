@@ -1,0 +1,46 @@
+<%@page import="model.ReviewDTO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	ReviewDTO dto = (ReviewDTO)request.getAttribute("review");
+	String rno = (String)request.getAttribute("num");
+	int pageNum = (Integer) request.getAttribute("pageNum");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>리뷰 상세보기</title>
+<!-- style -->
+<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/review.css">
+<!-- script -->
+<script type="text/javascript" src="../resources/js/review.js"></script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+	<div class="py-3 text-center">
+		<img src="../resources/images/01.jpg" alt="x" class="rounded-circle flex-shrink-0">
+		<h3>리뷰 등록</h3>
+		<p class="lead">사용자가 사진과 함께 리뷰를 작성할 수 있습니다</p>
+	</div>
+	<div class="col-md-7 col-lg-6 mx-auto">
+		<input type="hidden" id="uid" name="uid" value="<%= session.getAttribute("id")%>">
+		<div class="row g-3">
+			<%	if(dto.getOimgData() != null){ %>
+				<img alt="" src="<%= request.getContextPath()%>/uploads/<%= dto.getOimgData()%>">
+			<%	} %>
+			<label for="title" class="form-label"><b>제목</b></label>
+			<input type="text" class="form-control" id="title" name="title" value="<%= dto.getRtitle() %>" readonly>
+			<label for="content" class="form-label"><b>내용</b></label>
+			<textarea rows="10" cols="8" id="content" name="content" readonly><%= dto.getRcont() %></textarea>
+			<label for="file" class="form-babel"></label>
+		</div>
+		<%	if(dto.getRid().equals(session.getAttribute("id"))){ %>
+			<button type="button" class="btn btn-primary mt-3" id="reset" name="reset" onclick="history.back(-1);">수정하기</button>
+		<%	} %>
+		<button type="button" class="btn btn-primary mt-3" id="reset" name="reset" onclick="history.back(-1);">뒤로가기</button>
+	</div>
+	<jsp:include page="../include/footer.jsp" />
+</body>
+</html>

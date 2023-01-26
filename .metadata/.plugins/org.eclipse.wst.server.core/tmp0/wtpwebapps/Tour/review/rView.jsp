@@ -1,0 +1,60 @@
+<%@page import="model.ReviewDTO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	ReviewDTO dto = (ReviewDTO)request.getAttribute("review");
+	String rno = (String)request.getAttribute("num");
+	int pageNum = (Integer) request.getAttribute("pageNum");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>리뷰 상세보기</title>
+<!-- style -->
+<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/review.css">
+<!-- script -->
+<script type="text/javascript" src="../resources/js/review.js"></script>
+<script type="text/javascript">
+	function chkDelete(){
+		if(confirm("정말 삭제하시겠습니까?")){
+			location.href="/delReview.re?rbno=<%= rno %>";
+		}
+	}
+</script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+	<div class="py-3 text-center">
+		<img src="../resources/images/2.jpg" alt="x" class="rounded-circle flex-shrink-0">
+		<h3>리뷰 보기</h3>
+		<p class="lead">사용자가 사진과 함께 작성한 리뷰를 볼 수 있습니다.</p>
+	</div>
+	<div class="col-md-7 col-lg-6 mx-auto">
+		<form action="/rModify.re" method="post">
+		<input type="hidden" id="uid" name="uid" value="<%= session.getAttribute("id")%>">
+			<input type="hidden" id="rbno" name="rbno" value="<%= rno %>">
+			<input type="hidden" id="pageNum" name="pageNum" value="<%= pageNum %>">
+			<div class="row g-3">
+				<%	if(dto.getOimgData() != null){ %>
+					<input type="hidden" id="file" name="file" value="<%= dto.getOimgData()%>">
+					<img name="ofile" class="mx-auto" style="width: 400px; height: 300px;" alt="" src="<%= request.getContextPath()%>/uploads/<%= dto.getSimgData()%>">
+				<%	} %>
+				<label for="title" class="form-label"><b>제목</b></label>
+				<input type="hidden" id="title" name="title" value="<%= dto.getRtitle() %>">
+				<%= dto.getRtitle() %>
+				<label for="content" class="form-label"><b>내용</b></label>
+				<input type="hidden" id="content" name="content" value="<%= dto.getRcont() %>">
+				<%= dto.getRcont() %>
+			</div>
+			<%	if(dto.getRid().equals(session.getAttribute("id"))){ %>
+				<button type="submit" class="btn btn-primary mt-3" id="submit" name="submit">수정하기</button>
+				<button type="button" class="btn btn-primary mt-3" id="delete" name="delete" onclick="chkDelete()">삭제하기</button>
+			<%	} %>
+		<button type="button" class="btn btn-primary mt-3" id="reset" name="reset" onclick="history.back(-1);">뒤로가기</button>
+		</form>
+	</div>
+	<jsp:include page="../include/footer.jsp" />
+</body>
+</html>

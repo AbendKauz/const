@@ -1,0 +1,65 @@
+@charset "UTF-8";
+@font-face {
+ font-family: 'NanumBarunGothic';
+ font-style: normal;
+ font-weight: 400;
+ src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+ src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
+*{
+	margin: 0;
+	padding : 0;
+	color:gray;
+	 font-family: 'NanumBarunGothic';
+}
+li{list-style:none;}
+a{text-decoration:none; color:inherit;}
+
+.pre_list{
+	margin-left:-100px;
+	margin-top:70px;
+	border:1px solid #bcbcbc;
+	padding-top: 10%;
+	padding-bottom: 20%;
+	width: 700px;
+	height:550px;
+	display: block; font-size: 0;
+	text-align: center;
+	
+}
+table{
+	margin-top:40px;
+	margin-left:20px;
+	padding-left: 40%;
+}
+
+.cho_h, .cho_d, .cho_d2{
+	border: 1px solid #bcbcbc;
+	padding: 2px 2px;
+}
+.cho_h{
+	width:30%;
+	font-weight: bold;
+	color:black;
+	font-size:20px;
+}
+.cho_d{
+	width:40%;
+	font-size: 16px;
+}
+.cho_d2{
+	width:60%;
+	font-size: 16px;
+}
+
+.modify{
+	margin-top:90px;
+	border:1px solid #bcbcbc;
+	padding-top: 10%;
+	padding-left:30%;
+	padding-bottom: 10%;
+	padding-right: 30%;
+	margin-bottom: 1000px;
+	margin-left:-100px;
+}
+

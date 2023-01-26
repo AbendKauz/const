@@ -1,0 +1,105 @@
+package mvc.model;
+
+import java.util.Date;
+
+public class ReviewDTO {
+
+	/*
+	 * 리뷰 정보 column
+	 * 리뷰번호
+	 * 작성자 ID
+	 * 작성자 이름
+	 * 제목
+	 * 내용
+	 * 산책로 번호
+	 * 산책 경로명
+	 * 사진 이미지
+	 * 등록 날짜
+	 * 조회수
+	 * 좋아요 갯수
+	*/
+	
+	private int rbno;		// 리뷰 번호
+	private String rid;		// 작성자 ID
+	private String rname;	// 작성자 이름
+	private String rtitle;	// 제목
+	private String rcont;	// 내용
+	private int rno;		// 산책로 번호
+	private String cname;	// 산책경로명
+	private String imgData;	// 사진이미지
+	private Date regDate;	// 등록날짜
+	private int readCnt;	// 조회수
+	private int rblike;		// 좋아요 개수
+	
+	public ReviewDTO() {
+		super();
+	}
+	
+	public int getRbno() {
+		return rbno;
+	}
+	public void setRbno(int rbno) {
+		this.rbno = rbno;
+	}
+	public String getRid() {
+		return rid;
+	}
+	public void setRid(String rid) {
+		this.rid = rid;
+	}
+	public String getRname() {
+		return rname;
+	}
+	public void setRname(String rname) {
+		this.rname = rname;
+	}
+	public String getRtitle() {
+		return rtitle;
+	}
+	public void setRtitle(String rtitle) {
+		this.rtitle = rtitle;
+	}
+	public String getRcont() {
+		return rcont;
+	}
+	public void setRcont(String rcont) {
+		this.rcont = rcont;
+	}
+	public int getRno() {
+		return rno;
+	}
+	public void setRno(int rno) {
+		this.rno = rno;
+	}
+	public String getCname() {
+		return cname;
+	}
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+	public String getImgData() {
+		return imgData;
+	}
+	public void setImgData(String imgData) {
+		this.imgData = imgData;
+	}
+	public Date getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+	public int getReadCnt() {
+		return readCnt;
+	}
+	public void setReadCnt(int readCnt) {
+		this.readCnt = readCnt;
+	}
+	public int getRblike() {
+		return rblike;
+	}
+	public void setRblike(int rblike) {
+		this.rblike = rblike;
+	}
+	
+}

@@ -1,0 +1,40 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<%@ page pageEncoding="UTF-8"%>
+<html>
+<head>
+<title>메인화면 테스트</title>
+<script type="text/javascript">
+	
+	function clickTest(self) { 
+		console.log(self);
+		document.getElementById("fileno").value = self.value;
+	}
+	
+	function chkData(){
+		alert(document.getElementById("fileno").value.count());
+	}
+	
+</script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+		<input type="text" id="fileno" name="fileno" value="">
+		<form>		
+			<table>	
+				<tr>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="00.jpg"><img src="../resources/images/00.jpg"></button></td>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="10.jpg"><img src="../resources/images/10.jpg"></button></td>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="20.jpg"><img src="../resources/images/20.jpg"></button></td>
+				</tr>
+				<tr>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="30.jpg"><img src="../resources/images/30.jpg"></button></td>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="40.jpg"><img src="../resources/images/40.jpg"></button></td>
+					<td><button type="button" class="btn" onclick="clickTest(this)" value="50.jpg"><img src="../resources/images/50.jpg"></button></td>
+				</tr>
+			</table>
+			<button type="button" onclick="chkData()">전송</button>
+		</form>
+	<jsp:include page="../include/footer.jsp"/>
+</body>
+</html>

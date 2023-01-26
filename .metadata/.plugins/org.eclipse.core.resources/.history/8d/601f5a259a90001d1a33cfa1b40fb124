@@ -1,0 +1,116 @@
+<%@page import="utils.JSFunction"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+   pageEncoding="UTF-8"%>
+<%
+   if(session.getAttribute("id") != null){
+      JSFunction.alertLocation(response, "잘못된 접근입니다.", "../main/mMain.jsp"); 
+   }
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원가입 화면</title>
+<!-- style -->
+<link rel="stylesheet"
+   href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+   integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+   crossorigin="anonymous">
+
+<link rel="stylesheet" href="../resources/css/uJoin.css">
+<style type="text/css">
+   body{
+      background-image: url(../resources/bg/main_bg_img20.jpg);
+   }
+   tr{
+	height: 50px;
+	margin-bottom: 5px;
+   }
+</style>
+<!-- script -->
+<script type="text/javascript" src="../resources/js/user.js"></script>
+<script type="text/javascript">
+
+	// ID 중복검사
+	function confirmId(){
+		let idReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*()+|=]{6,12}$/;	// 영문자, 숫자 1개이상 필수, 6~12글자
+		if(joinFrm.id.value == null || joinFrm.id.value == ""){	// id 입력란 공백 체크
+			alert("ID를 입력해주세요.");
+			joinFrm.id.focus();
+			return;
+		} else if (!idReg.test(joinFrm.id.value)) {	// 유효성 검사
+			alert("아이디는 영문자+숫자로 6자리 이상을 사용하세요.");
+			joinFrm.id.focus();
+			return;
+		} 
+		let popWidth = 300;		/* 팝업 가로길이 */
+		let popHeight = 200;	/* 팝업 세로길이 */
+		let popX = (window.screen.width / 2) - (popWidth / 2);		/* 팝업 가로위치 지정 */
+		let popY = (window.screen.height / 2) - (popHeight / 2);	/* 팝업 세로위치 지정 */
+		url = "./user/uChkId.jsp?id=" + joinFrm.id.value;	/* 중복결과화면 주소 */
+		open(url, "confirm", "toolbar=no, location=no, status=no, menubar=no, resizable=no, width="+popWidth+", height="+popHeight+", left="+popX+" ,top="+popY);
+	}
+
+</script>
+</head>
+<body>
+   <jsp:include page="../include/header_main.jsp" />
+   <div class="container hei">
+      <div class="my-auto d-flex justify-content-center text-center">
+         <form action="/uCate.us" method="post" id="joinFrm" name="joinFrm">
+            <h5 class="join_text mb-3">회원 가입</h5>
+            <table>
+	            <tr>
+	            	<td>
+		            	<label>ID</label>
+	            	</td>
+	            	<td>
+		            	<input type="text" id="id" name="id" class="join_tag join_id" placeholder="ID : 영문+숫자 포함 6~12" maxlength="12">
+		            	<button class="Ca_button" type="button" id="chkId" name="chkId" onclick="confirmId(this.form)">ID 중복검사</button>
+	            	</td>
+	            </tr>
+	            <tr>
+	            </tr>
+	            <tr>
+	            	<td>
+		            	<label>비밀번호</label>
+	            	</td>
+	            	<td>
+		               <input type="password" id="pw" name="pw" class="join_tag" placeholder="비밀번호 : 영문+숫자+특수문자 포함 8~20" maxlength="25">
+	            	</td>
+	            </tr>
+	            <tr>
+	            </tr>
+	            <tr>
+	            	<td>
+		            	<label>이름</label>
+	            	</td>
+	            	<td>
+		               <input type="text" id="name" name="name" class="join_tag" placeholder="이름" maxlength="5">
+	            	</td>
+	            </tr>
+	            <tr>
+	            </tr>
+	            <tr>
+	            	<td>
+		            	<label>전화번호</label>
+	            	</td>
+	            	<td>
+		               <input type="text" id="tel" name="tel" class="join_tag" placeholder=" - 없이 전화번호" maxlength="11" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
+	            	</td>
+	            </tr>
+            </table>
+            <div class="ca-group">
+				<button type="button" class="Ca_button" onclick="location.href='../main/mMain.jsp'">&lt;&nbsp;&nbsp; 홈</button>
+				<button type="button" class="Ca_button" onclick="chkForm()">다음&nbsp;&nbsp; &gt;</button>
+            </div>
+         </form>
+      </div>
+   </div>
+   <div class="footer">
+      <jsp:include page="../include/footer_main.jsp"/>
+   </div>
+</body>
+</html>

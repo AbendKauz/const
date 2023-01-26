@@ -1,0 +1,183 @@
+package mvc.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import mvc.model.SelectDAO;
+import mvc.model.SelectDTO;
+
+@WebServlet("/SelectController")
+public class SelectController extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+    static final int LISTCOUNT = 5;
+    
+    public SelectController() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String RequestURI = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String command = RequestURI.substring(contextPath.length());
+		System.out.println(command);
+		
+		response.setContentType("text/html; charset=utf-8");
+		request.setCharacterEncoding("utf-8");
+		
+		if(command.equals("/select1.do")) {	// 1페이지
+			readSelect(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./select1.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/select2.do")) {	// 2페이지
+			readSelect(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./select2.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/select3.do")) {	// 3페이지
+			readSelect(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./select3.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/select4.do")) {	// 4페이지
+			readSelect(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./select4.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/select5.do")) {	// 5페이지
+			readSelect(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./select5.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/category.do")) {	// 카테고리
+			RequestDispatcher rd = request.getRequestDispatcher("./category.jsp");
+			rd.forward(request, response);
+		}else if(command.equals("/result.do")) {	// 결과
+			addDB(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./result.jsp");
+			rd.forward(request, response);
+		}
+	}
+
+	private void readSelect(HttpServletRequest request) {	// 이미지 랜덤 호출
+		SelectDTO list = new SelectDTO();
+		// 각 카테고리에서 랜덤 이미지 1장씩 추출
+		// 1. 강(00~11)
+		// 2. 도심(12~24)
+		// 3. 바다(25~46)
+		// 4. 산(47~71)
+		// 5. 역사문화(72~99)
+		list.setImg1(String.valueOf((int)(Math.random() * 11)));
+		System.out.println("1 : " + list.getImg1());
+		list.setImg2(String.valueOf((int)(Math.random() * 12) + 12));
+		System.out.println("2 : " + list.getImg2());
+		list.setImg3(String.valueOf((int)(Math.random() * 21) + 25));
+		System.out.println("3 : " + list.getImg3());
+		list.setImg4(String.valueOf((int)(Math.random() * 24) + 47));
+		System.out.println("4 : " + list.getImg4());
+		list.setImg5(String.valueOf((int)(Math.random() * 27) + 72));
+		System.out.println("5 : " + list.getImg5());
+		request.setAttribute("list", list);
+	}
+	
+	private void addDB(HttpServletRequest request) {
+		SelectDAO dao = SelectDAO.getInstance();
+		SelectDTO dto = new SelectDTO();
+		
+		// 선택된 5개의 사진
+		dto.setImg1(request.getParameter("no1"));
+		dto.setImg2(request.getParameter("no2"));
+		dto.setImg3(request.getParameter("no3"));
+		dto.setImg4(request.getParameter("no4"));
+		dto.setImg5(request.getParameter("no5"));
+		
+		// 선택된 카테고리 카운트
+		int ca1 = 0;
+		int ca2 = 0;
+		int ca3 = 0;
+		int ca4 = 0;
+		int ca5 = 0;
+		
+		if(0 <= Integer.parseInt(request.getParameter("no1")) && Integer.parseInt(request.getParameter("no1")) <= 11) {
+			ca1++;
+		}else if(12 <= Integer.parseInt(request.getParameter("no1")) && Integer.parseInt(request.getParameter("no1")) <= 24) {
+			ca2++;
+		}else if(25 <= Integer.parseInt(request.getParameter("no1")) && Integer.parseInt(request.getParameter("no1")) <= 46) {
+			ca3++;
+		}else if(47 <= Integer.parseInt(request.getParameter("no1")) && Integer.parseInt(request.getParameter("no1")) <= 71) {
+			ca4++;
+		}else if(72 <= Integer.parseInt(request.getParameter("no1")) && Integer.parseInt(request.getParameter("no1")) <= 99) {
+			ca5++;
+		}
+		
+		if(0 <= Integer.parseInt(request.getParameter("no2")) && Integer.parseInt(request.getParameter("no2")) <= 11) {
+			ca1++;
+		}else if(12 <= Integer.parseInt(request.getParameter("no2")) && Integer.parseInt(request.getParameter("no2")) <= 24) {
+			ca2++;
+		}else if(25 <= Integer.parseInt(request.getParameter("no2")) && Integer.parseInt(request.getParameter("no2")) <= 46) {
+			ca3++;
+		}else if(47 <= Integer.parseInt(request.getParameter("no2")) && Integer.parseInt(request.getParameter("no2")) <= 71) {
+			ca4++;
+		}else if(72 <= Integer.parseInt(request.getParameter("no2")) && Integer.parseInt(request.getParameter("no2")) <= 99) {
+			ca5++;
+		}
+		
+		if(0 <= Integer.parseInt(request.getParameter("no3")) && Integer.parseInt(request.getParameter("no3")) <= 11) {
+			ca1++;
+		}else if(12 <= Integer.parseInt(request.getParameter("no3")) && Integer.parseInt(request.getParameter("no3")) <= 24) {
+			ca2++;
+		}else if(25 <= Integer.parseInt(request.getParameter("no3")) && Integer.parseInt(request.getParameter("no3")) <= 46) {
+			ca3++;
+		}else if(47 <= Integer.parseInt(request.getParameter("no3")) && Integer.parseInt(request.getParameter("no3")) <= 71) {
+			ca4++;
+		}else if(72 <= Integer.parseInt(request.getParameter("no3")) && Integer.parseInt(request.getParameter("no3")) <= 99) {
+			ca5++;
+		}
+		
+		if(0 <= Integer.parseInt(request.getParameter("no4")) && Integer.parseInt(request.getParameter("no4")) <= 11) {
+			ca1++;
+		}else if(12 <= Integer.parseInt(request.getParameter("no4")) && Integer.parseInt(request.getParameter("no4")) <= 24) {
+			ca2++;
+		}else if(25 <= Integer.parseInt(request.getParameter("no4")) && Integer.parseInt(request.getParameter("no4")) <= 46) {
+			ca3++;
+		}else if(47 <= Integer.parseInt(request.getParameter("no4")) && Integer.parseInt(request.getParameter("no4")) <= 71) {
+			ca4++;
+		}else if(72 <= Integer.parseInt(request.getParameter("no4")) && Integer.parseInt(request.getParameter("no4")) <= 99) {
+			ca5++;
+		}
+		
+		if(0 <= Integer.parseInt(request.getParameter("no5")) && Integer.parseInt(request.getParameter("no5")) <= 11) {
+			ca1++;
+		}else if(12 <= Integer.parseInt(request.getParameter("no5")) && Integer.parseInt(request.getParameter("no5")) <= 24) {
+			ca2++;
+		}else if(25 <= Integer.parseInt(request.getParameter("no5")) && Integer.parseInt(request.getParameter("no5")) <= 46) {
+			ca3++;
+		}else if(47 <= Integer.parseInt(request.getParameter("no5")) && Integer.parseInt(request.getParameter("no5")) <= 71) {
+			ca4++;
+		}else if(72 <= Integer.parseInt(request.getParameter("no5")) && Integer.parseInt(request.getParameter("no5")) <= 99) {
+			ca5++;
+		}
+		// 내가 만들었지만 넘나 노가다인것...ㅠ
+		
+		// 선택한 카테고리
+		dto.setResultCate(request.getParameter("resultCate"));
+		
+		// dto 객체에 카테고리 카운트 추가
+		dto.setCategory1(ca1);
+		dto.setCategory2(ca2);
+		dto.setCategory3(ca3);
+		dto.setCategory4(ca4);
+		dto.setCategory5(ca5);
+		
+		
+		dao.addResult(dto);
+		
+	}
+
+}

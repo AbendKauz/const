@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<context-param>
+		<param-name>POSTS_PER_PAGE</param-name>
+		<param-value>10</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>PAGES_PER_BLOCK</param-name>
+		<param-value>5</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>maxPostSize</param-name>
+		<param-value>1024000</param-value>
+	</context-param>
+	
+	<!-- 특정주소의 명령이 요청되는지 확인하여 해당 Controller로 보내는 역할 -->
+	
+	<servlet>
+		<servlet-name>MainController</servlet-name>
+		<servlet-class>controller.MainController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MainController</servlet-name>
+		<url-pattern>*.ma</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CourseController</servlet-name>
+		<servlet-class>controller.CourseController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CourseController</servlet-name>
+		<url-pattern>*.co</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ReviewController</servlet-name>
+		<servlet-class>controller.ReviewController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ReviewController</servlet-name>
+		<url-pattern>*.re</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UserController</servlet-name>
+		<servlet-class>controller.UserController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserController</servlet-name>
+		<url-pattern>*.us</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PrefController</servlet-name>
+		<servlet-class>controller.PrefController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PrefController</servlet-name>
+		<url-pattern>*.pr</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

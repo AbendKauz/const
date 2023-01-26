@@ -1,0 +1,56 @@
+@charset "UTF-8";
+@font-face {
+ font-family: 'NanumBarunGothic';
+ font-style: normal;
+ font-weight: 400;
+ src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+ src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
+*{
+	margin: 0;
+	padding : 0;
+	font-family: 'NanumBarunGothic';
+}
+li{list-style:none;}
+a{text-decoration:none; color:inherit;}
+
+
+.list-group-item{
+   width:800px;
+}
+
+.rounded-circle{
+ width:32px;
+ height:32px; 
+}
+
+.list-group>.d-flex{
+   width:600px;
+   height:100px;   
+   margin: 0 auto;
+}
+
+.list-group p{
+   color:gray;
+}
+
+.d-grid>btn{
+   margin:center;
+}
+
+.wr_btn{
+	width: 75%;
+	text-align: right;
+	margin-bottom:10px;
+}
+
+.py-3>.rounded-circle {
+	width: 80px;
+	height: 80px;
+}
+
+.needs-validation {
+	width: 700px;
+	height: 700px;
+	margin: auto;
+}

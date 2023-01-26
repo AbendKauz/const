@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<script type="text/javascript">
+	function chk(form){
+		if(form.id.value == "" || form.id.value == null){
+			alert("아이디를 입력해주세요.");
+		}else if(form.pw.value == "" || form.pw.value == null){
+			alert("비밀번호를 입력해주세요.");
+		}else if(form.name.value == "" || form.name.value == null){
+			alert("이름을 입력해주세요.");
+		}else if(form.tel.value == "" || form.tel.value == null){
+			alert("전화번호를 입력해주세요.");
+		}
+	}
+	function pageBack(){
+		
+	}
+</script>
+</head>
+<body>
+	<jsp:include page="../include/header.jsp" />
+	<form action="#" method="post">
+		<label>아이디 : </label>
+		<input type="text" id="uid" name="uid"><br/>
+		<label>비밀번호 : </label>
+		<input type="text" id="upw" name="upw"><br/>
+		<label>비밀번호 확인 : </label>
+		<input type="text" id="chkpw" name="chkpw"><br/>
+		<label>이름 : </label>
+		<input type="text" id="uname" name="uname"><br/>
+		<label>전화번호 : </label>
+		<input type="text" id="utel" name="utel"><br/>
+		<button type="button" onclick="chk(this)">가입</button>
+		<button type="button" onclick="pageBack()">취소</button>
+	</form>
+	<jsp:include page="../include/footer.jsp" />
+</body>
+</html>

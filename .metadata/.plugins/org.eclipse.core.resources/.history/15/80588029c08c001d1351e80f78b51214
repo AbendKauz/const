@@ -1,0 +1,228 @@
+package controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.oreilly.servlet.MultipartRequest;
+
+import fileupload.FileUtil;
+import model.ReviewDAO;
+import model.ReviewDTO;
+import utils.JSFunction;
+
+@WebServlet("/ReviewController")
+public class ReviewController extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+    static final int LISTCOUNT = 5;
+    
+    public ReviewController() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String requestURI = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String command = requestURI.substring(contextPath.length());
+		System.out.println(command);
+		
+		response.setContentType("text/html; charset=utf-8");
+		request.setCharacterEncoding("utf-8");
+		
+		if(command.equals("/rList.re")) {
+			selectReview(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("./review/rList.jsp");
+			rd.forward(request, response);
+		} else if(command.equals("/rWrite.re")) {
+			RequestDispatcher rd = request.getRequestDispatcher("./review/rWrite.jsp");
+			rd.forward(request, response);
+		} else if(command.equals("/rAdd.re")) {
+			addReview(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("/rList.re");
+			rd.forward(request, response);
+		} else if(command.equals("/rView.re")) {
+			selectView(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./review/rView.jsp");
+			rd.forward(request, response);
+		} else if(command.equals("/rModify.re")) {
+			RequestDispatcher rd = request.getRequestDispatcher("./review/rModify.jsp");
+			rd.forward(request, response);
+		} else if(command.equals("/rMod.re")) {
+			modifyReview(request, response);
+			selectView(request);
+			RequestDispatcher rd = request.getRequestDispatcher("./review/rView.jsp");
+			rd.forward(request, response);
+		}
+	}
+
+	// 리뷰 리스트 호출
+	private void selectReview(HttpServletRequest request, HttpServletResponse response) {
+		ReviewDAO dao = new ReviewDAO();
+		List<ReviewDTO> rlist = new ArrayList<ReviewDTO>();
+		
+		int pageNum = 1;
+		int limit = LISTCOUNT;
+		String leng = "n";
+		String keyword = "n";
+		
+		if(request.getParameter("pageNum") != null && request.getParameter("pageNum") != "n") {
+			pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		}
+		if(request.getParameter("leng") != null && request.getParameter("leng") != "n") {
+			leng =request.getParameter("leng");
+		}
+		if(request.getParameter("keyword") != null && request.getParameter("keyword") != "n") {
+			keyword = request.getParameter("keyword");
+		}
+		
+		// 리뷰 개수 확인
+		int total_record = dao.selectCount(leng, keyword);
+		
+		rlist = dao.getReviewList(pageNum, limit, leng, keyword);
+		
+		int total_page;
+		if(total_record % limit == 0) {
+			total_page = total_record / limit;
+			Math.floor(total_page);
+		}else {
+			total_page = total_record / limit;
+			Math.floor(total_page);
+			total_page++;
+		}
+		
+		request.setAttribute("pageNum", pageNum);
+		request.setAttribute("leng", leng);
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("total_page", total_page);
+		request.setAttribute("total_record", total_record);
+		request.setAttribute("rlist", rlist);
+	}
+
+	// 리뷰 등록
+	private void addReview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// 파일 업로드 관련
+		String saveDirectory = request.getServletContext().getRealPath("/uploads");
+		// 업로드 디렉토리의 물리적인 경로 확인
+		ServletContext application = getServletContext();
+		// web.xml에서 매개변수로 설정한 첨부파일의 최대용량 대입
+		int maxPostSize = Integer.parseInt(application.getInitParameter("maxPostSize"));
+		// 파일 업로드 실행
+		MultipartRequest mr = FileUtil.uploadFile(request, saveDirectory, maxPostSize);
+		if(mr == null) {	// 용량이 설정값(1mb)보다 큰지 확인
+			JSFunction.alertLocation(response, "파일 용량이 제한범위를 벗어났습니다.", "./review/rWrite.jsp");
+			return;
+		}
+		
+		ReviewDAO dao = ReviewDAO.getInstance();
+		
+		Calendar date = Calendar.getInstance();
+		SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		ReviewDTO dto = new ReviewDTO();
+		
+		dto.setRid(mr.getParameter("uid"));
+		dto.setRtitle(mr.getParameter("title"));
+		dto.setRcont(mr.getParameter("content"));
+		dto.setRegDate(today.format(date.getTime()));
+		dto.setReadCnt(0);
+		
+		String fileName = mr.getFilesystemName("imgData");
+		
+		// 기존 파일이 있는 경우 날짜/시간 데이터를 이용하여 파일명.확장자 저장
+		if(fileName != null) {
+			String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
+			String ext = fileName.substring(fileName.lastIndexOf("."));
+			String newFileName = now + ext;
+			
+			// 파일명 변경
+			File oldFile = new File(saveDirectory + File.separator + fileName);
+			File newFile = new File(saveDirectory + File.separator + newFileName);
+			oldFile.renameTo(newFile);
+			
+			dto.setOimgData(fileName);
+			dto.setSimgData(newFileName);
+		}
+		dao.insertReview(dto);
+	}
+
+	// 리뷰 상세보기
+	private void selectView(HttpServletRequest request) {
+		ReviewDAO dao = ReviewDAO.getInstance();
+		String num = request.getParameter("rbno");
+		int pageNum = 1;
+		if(request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		}
+		
+		ReviewDTO review = new ReviewDTO();
+		review = dao.getBoardNum(num, pageNum);
+		
+		request.setAttribute("num", num);
+		request.setAttribute("pageNum", pageNum);
+		request.setAttribute("review", review);
+		System.out.println("리뷰 상세보기");
+	}
+	
+	// 리뷰 수정
+	private void modifyReview(HttpServletRequest request, HttpServletResponse response) {
+		// 파일 업로드 관련
+		String saveDirectory = request.getServletContext().getRealPath("/uploads");
+		// 업로드 디렉토리의 물리적인 경로 확인
+		ServletContext application = getServletContext();
+		// web.xml에서 매개변수로 설정한 첨부파일의 최대용량 대입
+		int maxPostSize = Integer.parseInt(application.getInitParameter("maxPostSize"));
+		// 파일 업로드 실행
+		MultipartRequest mr = FileUtil.uploadFile(request, saveDirectory, maxPostSize);
+		if(mr == null) {	// 용량이 설정값(1mb)보다 큰지 확인
+			JSFunction.alertLocation(response, "파일 용량이 제한범위를 벗어났습니다.", "./review/rList.jsp");
+			return;
+		}
+		
+		ReviewDAO dao = ReviewDAO.getInstance();
+		Calendar date = Calendar.getInstance();
+		SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		ReviewDTO dto = new ReviewDTO();
+		
+		dto.setRid(mr.getParameter("uid"));
+		dto.setRtitle(mr.getParameter("title"));
+		dto.setRcont(mr.getParameter("content"));
+		dto.setRegDate(today.format(date.getTime()));
+		dto.setReadCnt(0);
+		
+		String fileName = mr.getFilesystemName("imgData");
+		
+		// 기존 파일이 있는 경우 날짜/시간 데이터를 이용하여 파일명.확장자 저장
+		if(fileName != null) {
+			String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
+			String ext = fileName.substring(fileName.lastIndexOf("."));
+			String newFileName = now + ext;
+			
+			// 파일명 변경
+			File oldFile = new File(saveDirectory + File.separator + fileName);
+			File newFile = new File(saveDirectory + File.separator + newFileName);
+			oldFile.renameTo(newFile);
+			
+			dto.setOimgData(fileName);
+			dto.setSimgData(newFileName);
+		}
+		dao.modifyReview(dto);
+	}
+
+}

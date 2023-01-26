@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/main/WebContent/course/cDetail.jsp=UTF-8
+encoding//src/main/WebContent/include/header.jsp=UTF-8
+encoding//src/main/WebContent/main/mMain.jsp=UTF-8
+encoding//src/main/WebContent/user/uLogin.jsp=UTF-8
+encoding//src/main/java/model/CourseDAO.java=UTF-8
+encoding//src/main/java/model/PrefDAO.java=UTF-8
+encoding//src/main/java/model/ReviewDAO.java=UTF-8
+encoding//src/main/java/model/UserDAO.java=UTF-8
+encoding/<project>=UTF-8

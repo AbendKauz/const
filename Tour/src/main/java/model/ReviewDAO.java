@@ -1,0 +1,248 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import database.DBConnection;
+
+public class ReviewDAO {
+
+	private static ReviewDAO instance;
+	
+	public ReviewDAO() {
+		
+	}
+
+	public static ReviewDAO getInstance() {
+		if (instance == null)
+			instance = new ReviewDAO();
+		return instance;
+	}
+
+	// 리뷰 개수 확인
+	public int selectCount(String leng, String keyword) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		
+		String sql = "select count(*) from review";
+		
+		if(leng != null && !leng.equals("n") && keyword != null && !keyword.equals("n")) {
+			sql += " where " + keyword + " like '%" + leng + "%'";
+		}
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) result = rs.getInt(1);
+			
+		}catch(Exception e) {
+			System.out.println("리뷰 개수 카운트 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
+	
+	// 리뷰 리스트 호출
+	public List<ReviewDTO> getReviewList(int pageNum, int limit, String leng, String keyword) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int start = (pageNum - 1) * limit;
+		
+		String sql = "select * from review";
+		
+		if(leng != null && !leng.equals("n") || keyword != null && !keyword.equals("n")) { 
+			sql += " where " + keyword + " like '%" + leng + "%'";
+		}
+		 
+		sql += " order by rno desc limit ?, ?";
+		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, limit);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				ReviewDTO dto = new ReviewDTO();
+				dto.setRbno(rs.getInt("rno"));
+				dto.setRid(rs.getString("rid"));
+				dto.setRtitle(rs.getString("rtitle"));
+				dto.setRcont(rs.getString("rcontent"));
+				dto.setRegDate(rs.getString("regdate"));
+				dto.setReadCnt(rs.getInt("readcnt"));
+				dto.setOimgData(rs.getString("ofile"));
+				dto.setSimgData(rs.getString("sfile"));
+				list.add(dto);
+			}
+			return list;
+		} catch(Exception e) {
+			System.out.println("리뷰 리스트 호출 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return null;
+	}
+
+	
+	// 리뷰 상세보기
+	
+	// 리뷰 작성
+	public void insertReview(ReviewDTO dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = DBConnection.getConnection();
+			
+			String sql = "insert into review(rid, rtitle, rcontent, regdate, readcnt, ofile, sfile) values(?,?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getRid());
+			pstmt.setString(2, dto.getRtitle());
+			pstmt.setString(3, dto.getRcont());
+			pstmt.setString(4, dto.getRegDate());
+			pstmt.setInt(5, dto.getReadCnt());
+			pstmt.setString(6, dto.getOimgData());
+			pstmt.setString(7, dto.getSimgData());
+			
+			pstmt.executeUpdate();
+		} catch(Exception e) {
+			System.out.println("리뷰 작성 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+	}
+
+	// 리뷰 상세보기
+	public ReviewDTO getBoardNum(String num, int pageNum) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ReviewDTO dto = null;
+		
+		String sql = "select * from review where rno=?";
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new ReviewDTO();
+				dto.setRbno(Integer.parseInt(rs.getString("rno")));
+				dto.setRid(rs.getString("rid"));
+				dto.setRtitle(rs.getString("rtitle"));
+				dto.setRcont(rs.getString("rcontent"));
+				dto.setRegDate(rs.getString("regdate"));
+				dto.setReadCnt(rs.getInt("readcnt"));
+				dto.setOimgData(rs.getString("ofile"));
+				dto.setSimgData(rs.getString("sfile"));
+			}
+			return dto;
+		} catch(Exception e) {
+			System.out.println("리뷰 상세보기 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		
+		return null;
+	}
+
+	// 리뷰 수정
+	public int modifyReview(ReviewDTO dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		String sql = "update review set rtitle=?, rcontent=?, ofile=?, sfile=? where rno=?";
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getRtitle());
+			pstmt.setString(2, dto.getRcont());
+			pstmt.setString(3, dto.getOimgData());
+			pstmt.setString(4, dto.getSimgData());
+			pstmt.setInt(5, dto.getRbno());
+			result = pstmt.executeUpdate();
+			
+			return result;
+		} catch(Exception e) {
+			System.out.println("리뷰 수정 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				throw new RuntimeException();
+			}
+		}
+		return 0;
+	}
+
+	// 리뷰 삭제
+	public int deleteReview(int rbno) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "delete from review where rno=?";
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, rbno);
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch(Exception e) {
+			System.out.println("리뷰 삭제 오류");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return 0;
+	}
+	
+}

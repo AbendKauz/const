@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;header_result.jsp&apos; to &apos;include&apos;&#x0D;&#x0A;- Original project: &apos;Tour&apos;&#x0D;&#x0A;- Destination element: &apos;include&apos;&#x0D;&#x0A;- Original element: &apos;header_result.jsp&apos;" description="Copy file" element1="src/main/WebContent/include/header_result.jsp" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1672017279664" target="/Tour/src/main/WebContent/include" units="0" version="1.0"/>
+</session>

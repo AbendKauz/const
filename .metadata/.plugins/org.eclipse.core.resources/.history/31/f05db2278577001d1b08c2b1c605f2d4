@@ -1,0 +1,81 @@
+package mvc.model;
+
+import java.util.Date;
+
+public class UserDTO {
+
+	/*
+	 * 유저 정보 column
+	 * ID
+	 * 비밀번호
+	 * 이름
+	 * 전화번호
+	 * 취향
+	 * 가입일
+	 * 좋아요 리뷰 번호
+	 * 관리자 여부
+	*/
+	
+	private String uid;
+	private String upw;
+	private String uname;
+	private String utel;
+	private String utaste;
+	private Date uregDate;
+	private String ulikeRno;
+	private int utok;
+	
+	public UserDTO() {
+		super();
+	}
+	
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	public String getUpw() {
+		return upw;
+	}
+	public void setUpw(String upw) {
+		this.upw = upw;
+	}
+	public String getUname() {
+		return uname;
+	}
+	public void setUname(String uname) {
+		this.uname = uname;
+	}
+	public String getUtel() {
+		return utel;
+	}
+	public void setUtel(String utel) {
+		this.utel = utel;
+	}
+	public String getUtaste() {
+		return utaste;
+	}
+	public void setUtaste(String utaste) {
+		this.utaste = utaste;
+	}
+	public Date getUregDate() {
+		return uregDate;
+	}
+	public void setUregDate(Date uregDate) {
+		this.uregDate = uregDate;
+	}
+	public String getUlikeRno() {
+		return ulikeRno;
+	}
+	public void setUlikeRno(String ulikeRno) {
+		this.ulikeRno = ulikeRno;
+	}
+	public int getUtok() {
+		return utok;
+	}
+	public void setUtok(int utok) {
+		this.utok = utok;
+	}
+	
+}
